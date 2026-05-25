@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact & Paiement - BusTicket Cameroun</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Outfit", sans-serif; background: #0A0A0F; color: #F0EEE8; min-height: 100vh; }
+    nav { position: sticky; top: 0; background: rgba(10,10,15,0.95); border-bottom: 1px solid rgba(255,165,0,0.15); padding: 0 24px; display: flex; justify-content: space-between; align-items: center; height: 64px; backdrop-filter: blur(16px); z-index: 100; }
+    .logo { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #FF8C00, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; cursor: pointer; text-decoration: none; }
+    .nav-links { display: flex; gap: 8px; align-items: center; }
+    .nav-link { padding: 7px 16px; border-radius: 20px; font-size: 14px; font-weight: 500; color: #B0AEA8; text-decoration: none; }
+    .nav-link.active { background: rgba(255,165,0,0.12); border: 1px solid rgba(255,165,0,0.3); color: #FFD700; }
+    .header { background: linear-gradient(135deg, #0A0A0F 0%, #1A0F00 50%, #0A0A0F 100%); padding: 50px 24px 40px; text-align: center; }
+    .header-title { font-size: clamp(24px, 6vw, 36px); font-weight: 900; background: linear-gradient(135deg, #FFFFFF 30%, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header-sub { font-size: 14px; color: #B0AEA8; max-width: 550px; margin: 16px auto 0; line-height: 1.6; }
+    .tabs { max-width: 900px; margin: 0 auto 24px; padding: 0 24px; display: flex; gap: 12px; }
+    .tab-btn { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 20px; font-size: 14px; font-weight: 700; color: #B0AEA8; cursor: pointer; transition: all 0.3s; font-family: inherit; }
+    .tab-btn:hover { background: rgba(255,255,255,0.08); }
+    .tab-btn.active { background: linear-gradient(135deg, #FF8C00, #FFD700); color: #0A0A0F; border-color: #FF8C00; box-shadow: 0 6px 20px rgba(255,140,0,0.3); }
+    .tab-content { display: none; max-width: 900px; margin: 0 auto 40px; padding: 0 24px; }
+    .tab-content.active { display: block; }
+    .contact-card, .payment-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; margin-bottom: 20px; }
+    .section-title { font-size: 16px; font-weight: 800; color: #FFD700; margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: #B0AEA8; margin-bottom: 6px; }
+    .form-input, .form-textarea { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px 16px; color: #F0EEE8; font-size: 14px; font-family: inherit; }
+    .form-input:focus, .form-textarea:focus { outline: none; border-color: #FF8C00; }
+    .form-textarea { min-height: 120px; resize: vertical; }
+    .contact-btn { background: linear-gradient(135deg, #FF8C00, #FFD700); color: #0A0A0F; border: none; border-radius: 14px; padding: 14px 24px; font-size: 15px; font-weight: 800; cursor: pointer; width: 100%; transition: all 0.2s; box-shadow: 0 6px 20px rgba(255,140,0,0.3); font-family: inherit; }
+    .contact-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,140,0,0.4); }
+    .contact-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+    .contact-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; text-align: center; }
+    .contact-icon { font-size: 28px; margin-bottom: 8px; }
+    .contact-text { font-size: 13px; color: #B0AEA8; }
+    .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .payment-method { background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.3s; text-align: center; }
+    .payment-method:hover { border-color: rgba(255,140,0,0.4); transform: translateY(-2px); }
+    .payment-method.selected { border-color: #FF8C00; background: rgba(255,140,0,0.1); box-shadow: 0 8px 24px rgba(255,140,0,0.2); }
+    .payment-logo { font-size: 32px; margin-bottom: 8px; }
+    .payment-name { font-size: 14px; font-weight: 700; color: #F0EEE8; margin-bottom: 4px; }
+    .payment-desc { font-size: 11px; color: #B0AEA8; }
+    .trip-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+    .trip-label { color: #B0AEA8; }
+    .trip-value { color: #F0EEE8; font-weight: 600; }
+    .places-badge { display: inline-block; background: rgba(255,140,0,0.15); border: 1px solid rgba(255,140,0,0.3); color: #FFD700; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 10px; margin: 8px 0; }
+    .total-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 2px solid rgba(255,255,255,0.1); margin-top: 16px; }
+    .total-label { font-size: 18px; font-weight: 800; color: #FFD700; }
+    .total-value { font-size: 26px; font-weight: 900; color: #FFD700; }
+    .pay-btn { background: linear-gradient(135deg, #FF8C00, #FFD700); color: #0A0A0F; border: none; border-radius: 14px; padding: 14px 24px; font-size: 15px; font-weight: 800; cursor: pointer; width: 100%; transition: all 0.2s; box-shadow: 0 6px 20px rgba(255,140,0,0.3); font-family: inherit; margin-top: 12px; }
+    .pay-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,140,0,0.4); }
+    .footer { background: rgba(10,10,15,0.95); border-top: 1px solid rgba(255,165,0,0.15); padding: 30px 24px; text-align: center; margin-top: 20px; }
+    .footer-title { font-size: 18px; font-weight: 800; color: #FFD700; margin-bottom: 6px; }
+    .footer-text { font-size: 13px; color: #B0AEA8; }
+    .success-message { display: none; background: rgba(0,255,127,0.1); border: 2px solid #00FF7F; border-radius: 16px; padding: 20px; text-align: center; }
+    .success-icon { font-size: 48px; margin-bottom: 12px; }
+    .success-title { font-size: 18px; font-weight: 800; color: #00FF7F; }
+    .success-text { font-size: 14px; color: #B0AEA8; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">🚌 BusTicket Cameroun</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="trajets.html" class="nav-link">Trajets</a>
+      <a href="contact.html" class="nav-link active">Contact</a>
+    </div>
+  </nav>
+
+  <section class="header">
+    <div class="header-title">Contact & Paiement</div>
+    <p class="header-sub">Contacte-nous ou paie ton billet</p>
+  </section>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('contact')">📧 Contact</button>
+    <button class="tab-btn" onclick="switchTab('payment')">💳 Paiement</button>
+  </div>
+
+  <div class="tab-content active" id="contactTab">
+    <div class="contact-card">
+      <div class="section-title">📧 Envoie-nous un message</div>
+      <form onsubmit="sendContact(event)">
+        <div class="form-group">
+          <label class="form-label">Nom</label>
+          <input type="text" class="form-input" name="name" placeholder="Ton nom" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" name="email" placeholder="ton@email.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" name="message" placeholder="Ton message..." required></textarea>
+        </div>
+        <button type="submit" class="contact-btn">📤 Envoyer</button>
+      </form>
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-text"><strong>Téléphone</strong><br />+237 677 123 456</div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div class="contact-text"><strong>Email</strong><br />contact@busticket.cm</div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-text"><strong>Adresse</strong><br />Douala, Cameroun</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="paymentTab">
+    <div class="success-message" id="successMessage">
+      <div class="success-icon">✅</div>
+      <div class="success-title">Paiement confirmé !</div>
+      <div class="success-text">Ton ticket est enregistré</div>
+    </div>
+
+    <div class="payment-card" id="paymentCard">
+      <div class="section-title">🎟️ Récapitulatif</div>
+      <div class="trip-row">
+        <div class="trip-label">Départ</div>
+        <div class="trip-value" id="summaryDepart">-</div>
+      </div>
+      <div class="trip-row">
+        <div class="trip-label">Arrivée</div>
+        <div class="trip-value" id="summaryArrivee">-</div>
+      </div>
+      <div class="trip-row">
+        <div class="trip-label">Agence</div>
+        <div class="trip-value" id="summaryAgence">-</div>
+      </div>
+      <div class="trip-row">
+        <div class="trip-label">Heure</div>
+        <div class="trip-value" id="summaryHeure">-</div>
+      </div>
+      <div class="trip-row">
+        <div class="trip-label">Classe</div>
+        <div class="trip-value" id="summaryClasse">-</div>
+      </div>
+      <div id="summaryPlaces"></div>
+      <div class="total-row">
+        <div class="total-label">Total</div>
+        <div class="total-value" id="summaryTotal">0 FCFA</div>
+      </div>
+
+      <div class="section-title" style="margin-top:24px;">💳 Paiement</div>
+      <form id="paymentForm" onsubmit="processPayment(event)">
+        <div class="payment-methods">
+          <div class="payment-method" id="momoMethod" onclick="selectPayment('momo')">
+            <div class="payment-logo">🟡</div>
+            <div class="payment-name">MTN MoMo</div>
+            <div class="payment-desc">Mobile Money</div>
+          </div>
+          <div class="payment-method" id="orangeMethod" onclick="selectPayment('orange')">
+            <div class="payment-logo">🟠</div>
+            <div class="payment-name">Orange Money</div>
+            <div class="payment-desc">Orange Money</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Numéro de téléphone</label>
+          <input type="tel" class="form-input" id="payPhone" placeholder="Ex: 677 123 456" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nom du passager</label>
+          <input type="text" class="form-input" id="payName" placeholder="Ton nom complet" required />
+        </div>
+
+        <button type="submit" class="pay-btn" id="payButton">
+          💳 Payer maintenant
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-title">🚌 BusTicket Cameroun</div>
+    <p class="footer-text">© 2026 BusTicket Cameroun</p>
+  </footer>
+
+  <script>
+    let selectedPaymentMethod = null;
+    let tripData = null;
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      if (tab === 'contact') {
+        document.querySelector('.tab-btn:first-child').classList.add('active');
+        document.getElementById('contactTab').classList.add('active');
+      } else {
+        document.querySelector('.tab-btn:last-child').classList.add('active');
+        document.getElementById('paymentTab').classList.add('active');
+        if (!tripData) loadPaymentData();
+      }
+    }
+
+    function sendContact(event) {
+      event.preventDefault();
+      alert('✅ Message envoyé ! Nous te répondrons sous 24h.');
+      event.target.reset();
+    }
+
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        depart: params.get('depart') || '',
+        arrivee: params.get('arrivee') || '',
+        agence: params.get('agence') || '',
+        heure: params.get('heure') || '',
+        classe: params.get('classe') || '',
+        prix: parseInt(params.get('prix')) || 0,
+        places: params.get('places') || '',
+        total: parseInt(params.get('total')) || 0
+      };
+    }
+
+    function loadPaymentData() {
+      tripData = getUrlParams();
+      
+      if (!tripData.depart) {
+        document.getElementById('paymentCard').innerHTML = `
+          <div class="section-title">🎟️ Aucune réservation</div>
+          <p style="color:#B0AEA8;font-size:14px;margin-top:12px;">Va sur "Trajets" et clique sur "Réserver"</p>
+        `;
+        return;
+      }
+
+      document.getElementById('summaryDepart').textContent = tripData.depart;
+      document.getElementById('summaryArrivee').textContent = tripData.arrivee;
+      document.getElementById('summaryAgence').textContent = tripData.agence;
+      document.getElementById('summaryHeure').textContent = tripData.heure;
+      document.getElementById('summaryClasse').textContent = tripData.classe;
+      
+      if (tripData.places) {
+        const placesArray = tripData.places.split(',').map(Number);
+        document.getElementById('summaryPlaces').innerHTML = `<div class="places-badge">🛋️ Places: ${placesArray.join(', ')}</div>`;
+      }
+      
+      document.getElementById('summaryTotal').textContent = formatPrix(tripData.total);
+    }
+
+    function formatPrix(p) { return p.toLocaleString("fr-FR") + " FCFA"; }
+
+    function selectPayment(method) {
+      selectedPaymentMethod = method;
+      document.getElementById('momoMethod').classList.remove('selected');
+      document.getElementById('orangeMethod').classList.remove('selected');
+      document.getElementById(method + 'Method').classList.add('selected');
+    }
+
+    function processPayment(event) {
+      event.preventDefault();
+      
+      if (!tripData || tripData.total === 0) {
+        alert('⚠️ Aucune réservation');
+        return;
+      }
+      if (!selectedPaymentMethod) {
+        alert('⚠️ Choisis MTN ou Orange');
+        return;
+      }
+
+      const phone = document.getElementById('payPhone').value.trim();
+      const name = document.getElementById('payName').value.trim();
+      
+      if (phone.length === 0) {
+        alert('⚠️ Entres ton numéro');
+        return;
+      }
+      if (name.length === 0) {
+        alert('⚠️ Entres ton nom');
+        return;
+      }
+
+      const btn = document.getElementById('payButton');
+      btn.disabled = true;
+      btn.textContent = '⏳ Envoi du code...';
+
+      setTimeout(() => {
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('paymentCard').style.display = 'none';
+        
+        const ticket = {
+          nom: name, depart: tripData.depart, arrivee: tripData.arrivee,
+          agence: tripData.agence, heure: tripData.heure, classe: tripData.classe,
+          places: tripData.places, total: tripData.total,
+          paymentMethod: selectedPaymentMethod === 'momo' ? 'MTN MoMo' : 'Orange Money',
+          phone: phone
+        };
+        
+        localStorage.setItem('lastTicket', JSON.stringify(ticket));
+        
+        const methodName = ticket.paymentMethod;
+        const total = formatPrix(ticket.total);
+        
+        alert(`✅ ${methodName} - Code de paiement envoyé !
+
+📱 Nous t'avons envoyé un code de confirmation sur ${phone}.
+
+💰 Montant: ${total}
+
+👉 Vérifie ton téléphone et entre le code reçu pour confirmer le paiement.`);
+        
+        setTimeout(() => {
+          location.href = 'index.html';
+        }, 1000);
+      }, 1500);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.location.search.includes('depart=')) {
+        switchTab('payment');
+      }
+      loadPaymentData();
+    });
+  </script>
+</body>
+</html>
